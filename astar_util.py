@@ -44,13 +44,9 @@ def remove(state, pred):
         new_state.remove(pred)
     return frozenset(new_state)
 
-def goal_check(state, goal_pred):
+def goal_check(state, goals):
     """
-    Checks goal condition
-    Input: current state
-    goal_pred: goal state
-    Output: Outputs True or False based on the state if any of the condition is met
-
+    state: current frozenset state
+    goals: iterable of goal predicates
     """
-    return any(
-         goal_pred in state)
+    return all(goal in state for goal in goals)

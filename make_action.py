@@ -23,7 +23,7 @@ List of predicates for gear assembly
 4. holding(object, orientation) empty list means gripper_empty
 ----------------------------------"""
 
-def make_pick(o, orientation, cost_value):
+def make_pick(o, o_type, orientation, cost_value):
     def precond(state):
         return (
             has(state, ("object_orientation", o, orientation)) and
@@ -33,19 +33,27 @@ def make_pick(o, orientation, cost_value):
 
     def effect(state):
         # We can have this effect only if we have succeeded
-        if o.value() == "gear":
-            state_step1 = add(state, ("holding", o.value(), orientation))
+        if o_type == "gear":
+            state_step1 = add(state, ("holding", o_type, orientation))
         else:
-            state_step1 = add(state, ("holding", o.value(), None))
+            state_step1 = add(state, ("holding", o_type, None))
         new_state = remove(state_step1, ("holding", None, None))
+        new_state = remove(new_state, ("is_graspable", o))
+        new_state = remove(new_state, ("object_orientation", o, orientation))
         return new_state
     
     def cost(state):
         return cost_value 
     
-    return Action(f"pick_{o}_{orientation}", (o,), precond, effect, cost)
+    return Action(f"pick_{o_type}_{orientation}", (o,), precond, effect, cost)
+
 
 def make_insert(o, target, support=None, grasp_mode=None, cost_value=1):
+
+    if grasp_mode is not None:
+        action_name = f"insert_{o}_into_{target}_{grasp_mode}"
+    else:
+        action_name = f"insert_{o}_into_{target}"
 
     def precond(state):
         holding_ok = has(state, ("holding", o, grasp_mode))
@@ -74,4 +82,4 @@ def make_insert(o, target, support=None, grasp_mode=None, cost_value=1):
     def cost_fn(state):
         return cost_value
 
-    return Action(f"insert_{o}_into_{target}_{grasp_mode}",(o, target), precond, effect, cost_fn)
+    return Action(action_name,(o, target), precond, effect, cost_fn)
