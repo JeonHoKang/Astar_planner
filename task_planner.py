@@ -42,12 +42,12 @@ def generate_actions(objects, holes,
 # A* Planner
 # ----------------------------
 
-def heuristic(state, goal):
+def heuristic(state, num_goal):
     # Simple heuristic: number of missing goal predicates
-    return len(state)
+    return num_goal - len(state)
 
 
-def astar(initial_state, goal_test, actions):
+def astar(initial_state, goal_test, num_goal, actions):
     counter = itertools.count()
     open_list = []
 
@@ -70,7 +70,7 @@ def astar(initial_state, goal_test, actions):
              if action.applicable(state):
                 next_state = action.apply(state)
                 new_g = g + action.cost(state)
-                new_f = new_g + heuristic(next_state, goal_test)
+                new_f = new_g + heuristic(next_state, num_goal)
                 heapq.heappush(open_list,
                                (new_f, new_g, next(counter), next_state, plan + [action]))
 
@@ -119,7 +119,7 @@ List of predicates for gear assembly
         ("is_graspable", "rod_3"),
 
         ("object_orientation", "rod_1", "right"),
-        ("object_orientation", "rod_2", "right"),
+        ("object_orientation", "rod_2", "side"),
         ("object_orientation", "rod_3", "side"),
 
         ("holding", None, None),
@@ -145,6 +145,7 @@ List of predicates for gear assembly
     plan = astar(
         initial_state,
         lambda s: goal_check(s, goal),
+        len(goal),
         available_actions
     )
 
