@@ -83,3 +83,21 @@ def make_insert(o, target, support=None, grasp_mode=None, cost_value=1):
         return cost_value
 
     return Action(action_name,(o, target), precond, effect, cost_fn)
+
+def make_singulate(o, cost_value=1):
+
+    def precond(state):
+        return (
+            not has(state, ("is_graspable", o)) and
+            has(state, ("holding", None, None))
+        )
+
+    def effect(state):
+         
+        state2 = add(state, ("is_graspable", o))
+        return state2
+
+    def cost_fn(state):
+        return cost_value
+
+    return Action(f"singulate_{o}",(o, ), precond, effect, cost_fn)

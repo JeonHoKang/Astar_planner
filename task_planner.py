@@ -1,6 +1,6 @@
 import heapq
 from astar_util import goal_check
-from make_action import  make_pick, make_insert
+from make_action import  make_pick, make_insert, make_singulate
 import itertools
 
 def generate_actions(objects, holes,
@@ -36,6 +36,9 @@ def generate_actions(objects, holes,
             for hole in holes.keys():
                 for orientation, cost in gear_orientations.items():
                     actions.append(make_insert(obj_type, hole, support = "rod", grasp_mode = orientation, cost_value=cost))
+
+    for obj in objects.keys():
+        actions.append(make_singulate(obj))
     return actions
 
 # ----------------------------k
@@ -107,8 +110,8 @@ List of predicates for gear assembly
      
     initial_state = frozenset({
         ("is_graspable", "gear_1"),
-        ("is_graspable", "gear_2"),
-        ("is_graspable", "gear_3"),
+        # ("is_graspable", "gear_2"),
+        # ("is_graspable", "gear_3"),
 
         ("object_orientation", "gear_1", "bottom"),
         ("object_orientation", "gear_2", "top"),
