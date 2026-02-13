@@ -1,6 +1,5 @@
 import heapq
-from copy import deepcopy
-from astar_util import add, remove, goal_check, has
+from astar_util import goal_check
 from make_action import  make_pick, make_insert
 import itertools
 
