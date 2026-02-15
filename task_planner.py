@@ -109,6 +109,14 @@ List of predicates for gear assembly
     # For pick() is_grapable(o), orientation(o) holding(o)
      
     initial_state = frozenset({
+        ("is_detectable", "gear_1"),
+        ("is_detectable", "gear_2"),
+        ("is_detectable", "gear_3"),
+        
+        ("is_detectable", "rod_1"),
+        ("is_detectable", "rod_2"),
+        ("is_detectable", "rod_3"),
+
         ("is_graspable", "gear_1"),
         # ("is_graspable", "gear_2"),
         # ("is_graspable", "gear_3"),

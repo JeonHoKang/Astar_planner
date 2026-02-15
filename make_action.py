@@ -15,7 +15,7 @@ List of actions for gear assembly
 
 """ ----------------------------
 List of predicates for gear assembly
-1. is_graspable(object)
+1. is_detectable(object)
 2. object_orientation(object, ) -> what orientation it is
     for cog: Top or Bottom
     for peg: right, opposite, side
@@ -26,6 +26,7 @@ List of predicates for gear assembly
 def make_pick(o, o_type, orientation, cost_value):
     def precond(state):
         return (
+            has(state, ("is_detectable", o,)) and
             has(state, ("object_orientation", o, orientation)) and
             has(state, ("is_graspable", o)) and
             has(state, ("holding", None, None))
